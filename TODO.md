@@ -1,5 +1,7 @@
 # TODO — Mi Terapia Regresiva
 
+> **STAGING ONLY:** este archivo pertenece exclusivamente al repositorio `miterapiaregresiva/stg`. No debe copiarse, sincronizarse ni promocionarse a producción.
+
 ## Prioridad inmediata
 
 ### 1. Normalizar la sección de autores

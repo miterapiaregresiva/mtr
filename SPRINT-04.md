@@ -1,5 +1,9 @@
 # Sprint 04 — UX, contacto, SEO técnico y rendimiento
 
+## Estado
+
+Implementación en curso.
+
 ## Objetivo
 
 Cerrar cuatro ajustes transversales antes de seguir ampliando contenido: interacción de FAQ, acceso persistente a WhatsApp, sitemap completo y adopción global de WebP.

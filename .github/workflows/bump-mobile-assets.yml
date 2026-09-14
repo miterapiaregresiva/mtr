@@ -1,4 +1,4 @@
-name: Bump mobile asset versions
+name: Center footer link columns
 
 on:
   push:
@@ -9,23 +9,35 @@ permissions:
   contents: write
 
 jobs:
-  bump:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Version styles and site JS in HTML
+      - name: Center footer navigation and bump cache
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
+          css_path = Path('assets/brand-lockup.css')
+          css = css_path.read_text(encoding='utf-8')
+          old = '''/* mobile-footer-columns:start */
+@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}.site-footer .footer-grid>nav:first-of-type{align-items:flex-end;text-align:right}.site-footer .footer-grid>nav:last-of-type{align-items:flex-start;text-align:left}}
+/* mobile-footer-columns:end */'''
+          new = '''/* footer-link-columns:start */
+.site-footer .footer-grid>nav{align-items:center;text-align:center}
+@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}.site-footer .footer-grid>nav:first-of-type,.site-footer .footer-grid>nav:last-of-type{align-items:center;text-align:center}}
+/* footer-link-columns:end */'''
+          if old not in css:
+              raise SystemExit('Expected mobile footer block not found')
+          css_path.write_text(css.replace(old, new), encoding='utf-8')
+
           changed = 0
           for p in Path('.').rglob('*.html'):
               text = p.read_text(encoding='utf-8')
-              new = re.sub(r'assets/styles\.css(?:\?v=[^"\']*)?', 'assets/styles.css?v=20260914-4', text)
-              new = re.sub(r'assets/site\.js(?:\?v=[^"\']*)?', 'assets/site.js?v=20260914-4', new)
-              if new != text:
-                  p.write_text(new, encoding='utf-8')
+              updated = re.sub(r'assets/brand-lockup\.css(?:\?v=[^"\']*)?', 'assets/brand-lockup.css?v=20260914-5', text)
+              if updated != text:
+                  p.write_text(updated, encoding='utf-8')
                   changed += 1
           print(f'Updated {changed} HTML files')
           PY
@@ -37,6 +49,6 @@ jobs:
           fi
           git config user.name "gofio-design"
           git config user.email "gofio.design@gmail.com"
-          git add '*.html' '**/*.html'
-          git commit -m "Bust mobile navigation and WhatsApp asset cache"
+          git add assets/brand-lockup.css '*.html' '**/*.html'
+          git commit -m "Center footer link columns"
           git push

@@ -1,4 +1,4 @@
-name: Center footer link columns
+name: Bump responsive header CSS version
 
 on:
   push:
@@ -13,23 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Center footer navigation and bump cache
+      - name: Bump brand lockup CSS version in HTML
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
-          css_path = Path('assets/brand-lockup.css')
-          css = css_path.read_text(encoding='utf-8')
-          marker = '/* footer-links-centered:20260914 */'
-          override = '\n' + marker + '\n.site-footer .footer-grid>nav{align-items:center;text-align:center}\n@media(max-width:700px){.site-footer .footer-grid>nav:first-of-type,.site-footer .footer-grid>nav:last-of-type{align-items:center;text-align:center}}\n'
-          if marker not in css:
-              css_path.write_text(css + override, encoding='utf-8')
-
           changed = 0
           for p in Path('.').rglob('*.html'):
               text = p.read_text(encoding='utf-8')
-              updated = re.sub(r'assets/brand-lockup\.css(?:\?v=[^"\']*)?', 'assets/brand-lockup.css?v=20260914-5', text)
+              updated = re.sub(r'assets/brand-lockup\.css(?:\?v=[^"\']*)?', 'assets/brand-lockup.css?v=20260914-6', text)
               if updated != text:
                   p.write_text(updated, encoding='utf-8')
                   changed += 1
@@ -43,7 +36,6 @@ jobs:
           fi
           git config user.name "gofio-design"
           git config user.email "gofio.design@gmail.com"
-          git add assets/brand-lockup.css
           find . -name '*.html' -print0 | xargs -0 git add
-          git commit -m "Center footer link columns"
+          git commit -m "Bust responsive header CSS cache"
           git push

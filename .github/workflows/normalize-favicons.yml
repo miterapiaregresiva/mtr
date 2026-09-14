@@ -1,0 +1,76 @@
+name: Normalize favicons
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-favicons.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  favicons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install image tools
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Generate favicon assets
+        run: |
+          convert assets/images/original/miterapiaregresiva.com_-1024x1024.png -resize 192x192 assets/icons/android-chrome-192x192.png
+          convert assets/images/original/miterapiaregresiva.com_-1024x1024.png -resize 512x512 assets/icons/android-chrome-512x512.png
+
+      - name: Write manifest
+        run: |
+          cat > assets/icons/site.webmanifest <<'EOF'
+          {
+            "name": "Mi Terapia Regresiva",
+            "short_name": "Mi Terapia Regresiva",
+            "icons": [
+              {"src": "android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
+              {"src": "android-chrome-512x512.png", "sizes": "512x512", "type": "image/png"}
+            ],
+            "theme_color": "#6b3f78",
+            "background_color": "#fbf9fc",
+            "display": "standalone"
+          }
+          EOF
+
+      - name: Normalize HTML favicon links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          block = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">'
+                   '<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">'
+                   '<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">'
+                   '<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">'
+                   '<link rel="manifest" href="assets/icons/site.webmanifest">'
+                   '<meta name="theme-color" content="#6b3f78">')
+          for p in Path('.').rglob('*.html'):
+              text = p.read_text(encoding='utf-8')
+              text = re.sub(r'<link rel="icon"[^>]*>', '', text)
+              text = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '', text)
+              text = re.sub(r'<link rel="manifest"[^>]*>', '', text)
+              text = re.sub(r'<meta name="theme-color"[^>]*>', '', text)
+              text = text.replace('</head>', block + '</head>')
+              p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit favicon normalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/icons '*.html' '**/*.html'
+          if git diff --cached --quiet; then
+            echo 'No favicon changes to commit.'
+          else
+            git commit -m 'Sprint 3: normalize favicons across site'
+            git push
+          fi

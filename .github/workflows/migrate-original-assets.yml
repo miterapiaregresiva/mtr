@@ -1,0 +1,40 @@
+name: Migrate original assets
+
+on:
+  push:
+    paths:
+      - '.github/workflows/migrate-original-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout new site
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone original site
+        run: git clone --depth 1 https://github.com/miterapiaregresiva/miterapiaregresiva.github.io.git /tmp/mtr-original
+
+      - name: Copy reusable images and icons
+        run: |
+          mkdir -p assets/images/original assets/icons
+          cp -a /tmp/mtr-original/wp-content/uploads/2023/04/. assets/images/original/
+          cp -a /tmp/mtr-original/wp-content/uploads/fbrfg/. assets/icons/
+
+      - name: Commit migrated assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/images/original assets/icons
+          if git diff --cached --quiet; then
+            echo 'No asset changes to commit.'
+          else
+            git commit -m 'Sprint 2: migrate original image assets'
+            git push
+          fi

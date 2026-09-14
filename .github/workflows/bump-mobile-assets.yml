@@ -1,0 +1,42 @@
+name: Bump mobile asset versions
+
+on:
+  push:
+    paths:
+      - '.github/workflows/bump-mobile-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version styles and site JS in HTML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          changed = 0
+          for p in Path('.').rglob('*.html'):
+              text = p.read_text(encoding='utf-8')
+              new = re.sub(r'assets/styles\.css(?:\?v=[^"\']*)?', 'assets/styles.css?v=20260914-4', text)
+              new = re.sub(r'assets/site\.js(?:\?v=[^"\']*)?', 'assets/site.js?v=20260914-4', new)
+              if new != text:
+                  p.write_text(new, encoding='utf-8')
+                  changed += 1
+          print(f'Updated {changed} HTML files')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git config user.name "gofio-design"
+          git config user.email "gofio.design@gmail.com"
+          git add '*.html' '**/*.html'
+          git commit -m "Bust mobile navigation and WhatsApp asset cache"
+          git push

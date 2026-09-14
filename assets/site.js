@@ -39,6 +39,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  /*
+   * Improve the visibility of standalone navigation links inside the page
+   * content. They remain semantic <a> elements (not <button>) because they
+   * navigate to another resource; only their visual treatment changes.
+   * Inline links, breadcrumbs, bibliographic links, navigation and footer
+   * links are deliberately left untouched.
+   */
+  document.querySelectorAll('main p').forEach(function (paragraph) {
+    var meaningfulNodes = Array.from(paragraph.childNodes).filter(function (node) {
+      return node.nodeType !== Node.TEXT_NODE || node.textContent.trim() !== '';
+    });
+    if (meaningfulNodes.length !== 1) return;
+    var link = meaningfulNodes[0];
+    if (link.nodeType !== Node.ELEMENT_NODE || link.tagName !== 'A') return;
+    link.classList.add('button', 'content-link-button');
+  });
+
   if (!document.querySelector('.whatsapp-float')) {
     var link = document.createElement('a');
     link.className = 'whatsapp-float';
@@ -84,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!document.getElementById('sprint-4-styles')) {
     var style = document.createElement('style');
     style.id = 'sprint-4-styles';
-    style.textContent = '.footer-legal{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line);font-size:.84rem}.footer-legal p{margin:0}.whatsapp-float{position:fixed;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));z-index:50;min-width:58px;height:58px;padding:0 1rem;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#25d366;color:#fff;font-weight:750;text-decoration:none;box-shadow:0 12px 30px rgba(24,93,50,.28);animation:wa-pop .45s ease-out both,wa-pulse 1.7s ease-in-out 1.5s 2}.whatsapp-float::before{content:"¿Hablamos?";position:absolute;right:calc(100% + .7rem);white-space:nowrap;background:#fff;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:.42rem .72rem;font-size:.88rem;font-weight:650;box-shadow:0 8px 22px rgba(55,34,63,.12);opacity:0;pointer-events:none;animation:wa-tip 7s ease 1.1s 1 both}.whatsapp-float:hover,.whatsapp-float:focus-visible{background:#1da851}.whatsapp-float:hover::before,.whatsapp-float:focus-visible::before{opacity:1;animation:none}@keyframes wa-pop{from{opacity:0;transform:translateY(18px) scale(.85)}to{opacity:1;transform:none}}@keyframes wa-pulse{0%,100%{box-shadow:0 12px 30px rgba(24,93,50,.28)}50%{box-shadow:0 12px 30px rgba(24,93,50,.28),0 0 0 9px rgba(37,211,102,.16)}}@keyframes wa-tip{0%,100%{opacity:0;transform:translateX(8px)}12%,72%{opacity:1;transform:none}}@media(max-width:520px){.whatsapp-float{font-size:.86rem;height:54px}.whatsapp-float::before{display:none}}@media(prefers-reduced-motion:reduce){.whatsapp-float,.whatsapp-float::before{animation:none}}';
+    style.textContent = '.footer-legal{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line);font-size:.84rem}.footer-legal p{margin:0}.content-link-button{margin-top:.2rem;min-height:48px}.card .content-link-button{margin-top:.35rem}.whatsapp-float{position:fixed;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));z-index:50;min-width:58px;height:58px;padding:0 1rem;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#25d366;color:#fff;font-weight:750;text-decoration:none;box-shadow:0 12px 30px rgba(24,93,50,.28);animation:wa-pop .45s ease-out both,wa-pulse 1.7s ease-in-out 1.5s 2}.whatsapp-float::before{content:"¿Hablamos?";position:absolute;right:calc(100% + .7rem);white-space:nowrap;background:#fff;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:.42rem .72rem;font-size:.88rem;font-weight:650;box-shadow:0 8px 22px rgba(55,34,63,.12);opacity:0;pointer-events:none;animation:wa-tip 7s ease 1.1s 1 both}.whatsapp-float:hover,.whatsapp-float:focus-visible{background:#1da851}.whatsapp-float:hover::before,.whatsapp-float:focus-visible::before{opacity:1;animation:none}@keyframes wa-pop{from{opacity:0;transform:translateY(18px) scale(.85)}to{opacity:1;transform:none}}@keyframes wa-pulse{0%,100%{box-shadow:0 12px 30px rgba(24,93,50,.28)}50%{box-shadow:0 12px 30px rgba(24,93,50,.28),0 0 0 9px rgba(37,211,102,.16)}}@keyframes wa-tip{0%,100%{opacity:0;transform:translateX(8px)}12%,72%{opacity:1;transform:none}}@media(max-width:520px){.content-link-button{width:100%}.whatsapp-float{font-size:.86rem;height:54px}.whatsapp-float::before{display:none}}@media(prefers-reduced-motion:reduce){.whatsapp-float,.whatsapp-float::before{animation:none}}';
     document.head.appendChild(style);
   }
 });

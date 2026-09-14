@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/normalize-favicons.yml'
+      - '**/*.html'
   workflow_dispatch:
 
 permissions:
@@ -11,6 +12,7 @@ permissions:
 
 jobs:
   favicons:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

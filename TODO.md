@@ -21,7 +21,7 @@ Patrón visual y estructural: fichas de **Brian Weiss** y **Michael Newton**.
 
 ## Lighthouse / calidad técnica
 
-Resultados recibidos el 14/09/2026 para `https://miterapiaregresiva.com/mtr/`:
+Resultados recibidos el 14/09/2026 para `https://stg.miterapiaregresiva.com/`:
 
 - Performance: 100
 - Accessibility: 100

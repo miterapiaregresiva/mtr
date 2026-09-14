@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var line = document.createElement('p');
     line.appendChild(document.createTextNode('© 2023–2026 Mi Terapia Regresiva · Código bajo '));
     var license = document.createElement('a');
-    license.href = 'https://github.com/miterapiaregresiva/mtr/blob/main/LICENSE';
+    license.href = 'https://github.com/miterapiaregresiva/stg/blob/main/LICENSE';
     license.target = '_blank';
     license.rel = 'noopener noreferrer';
     license.textContent = 'GNU AGPL v3.0';

@@ -2,13 +2,13 @@
 
 ## Objetivo
 
-Trasladar contenidos y recursos útiles de la web original al repositorio `miterapiaregresiva/mtr`, recuperar su identidad visual y mejorar funcionalidad y accesibilidad sin arrastrar la estructura de WordPress.
+Trasladar contenidos y recursos útiles de la web original al repositorio `miterapiaregresiva/stg`, recuperar su identidad visual y mejorar funcionalidad y accesibilidad sin arrastrar la estructura de WordPress.
 
 ## Entorno de pruebas
 
 El sitio se prueba actualmente bajo:
 
-`https://miterapiaregresiva.com/mtr/`
+`https://stg.miterapiaregresiva.com/`
 
 Mientras permanezca en staging:
 

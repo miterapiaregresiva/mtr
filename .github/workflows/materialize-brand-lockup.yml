@@ -28,9 +28,8 @@ jobs:
                    '<span class="brand-tagline">Explora tu historia. Comprende tu presente.</span>'
                    '<span class="brand-service">Terapia regresiva en Tenerife</span>'
                    '</span></a>')
-          anchor = re.compile(r'<a\s+class="brand(?:\s+brand-lockup)?"\s+href=""(?:\s+aria-label="[^"]*")?>.*?</a>', re.S)
-          headers = 0
-          changed = 0
+          anchor = re.compile(r'<a\s+class="brand(?:\s+brand-lockup)?"\s+href="(?:\./)?"(?:\s+aria-label="[^"]*")?>.*?</a>', re.S)
+          headers = changed = 0
           for path in Path('.').rglob('*.html'):
               text = path.read_text(encoding='utf-8')
               if 'site-header' not in text:
@@ -47,12 +46,15 @@ jobs:
               if new != text:
                   path.write_text(new, encoding='utf-8')
                   changed += 1
+
           js_path = Path('assets/site.js')
-          js = js_path.read_text(encoding='utf-8')
-          js = re.sub(r'\n  /\* Shared, indexable brand lockup across all page headers\. \*/.*?\n\n  var webpMap', '\n\n  var webpMap', js, count=1, flags=re.S)
+          lines = js_path.read_text(encoding='utf-8').splitlines()
+          lines = [line for line in lines if 'link[href="assets/brand-lockup.css"]' not in line and "querySelectorAll('.site-header .brand')" not in line]
+          js = '\n'.join(lines) + '\n'
           if 'brand.innerHTML' in js or "querySelectorAll('.site-header .brand')" in js:
               raise SystemExit('assets/site.js still builds the header brand')
           js_path.write_text(js, encoding='utf-8')
+
           if not headers:
               raise SystemExit('No page headers found')
           problems = []

@@ -1,4 +1,4 @@
-name: Bump compact header CSS version
+name: Bump desktop header CSS version
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           changed = 0
           for p in Path('.').rglob('*.html'):
               text = p.read_text(encoding='utf-8')
-              updated = re.sub(r'assets/brand-lockup\.css(?:\?v=[^"\']*)?', 'assets/brand-lockup.css?v=20260914-7', text)
+              updated = re.sub(r'assets/brand-lockup\.css(?:\?v=[^"\']*)?', 'assets/brand-lockup.css?v=20260914-8', text)
               if updated != text:
                   p.write_text(updated, encoding='utf-8')
                   changed += 1
@@ -37,5 +37,5 @@ jobs:
           git config user.name "gofio-design"
           git config user.email "gofio.design@gmail.com"
           find . -name '*.html' -print0 | xargs -0 git add
-          git commit -m "Bust compact header CSS cache"
+          git commit -m "Bust desktop header CSS cache"
           git push

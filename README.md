@@ -4,7 +4,7 @@ Nueva versión de **miterapiaregresiva.com** orientada a SEO, tráfico orgánico
 
 ## Estado
 
-Sprint 01 implementado como staging estático.
+Staging estático en desarrollo y revisión continua.
 
 ### Núcleo principal
 
@@ -20,9 +20,14 @@ Sprint 01 implementado como staging estático.
 
 - Biblioteca de terapia regresiva
 - Índice de autores
-- Ficha de Michael Newton
-- Bibliografía y primeras fichas de libros
+- Fichas de autores normalizadas
+- Bibliografías y fichas de libros
 
 La biblioteca se mantiene deliberadamente como recurso secundario de apoyo, no como eje de navegación del sitio.
 
-Consulta [`SPRINT-01.md`](SPRINT-01.md) para ver decisiones, arquitectura y pendientes.
+## Seguimiento
+
+- [`TODO.md`](TODO.md): pendientes editoriales, técnicos, Instagram y preparación de producción.
+- [`SPRINT-01.md`](SPRINT-01.md): arquitectura inicial.
+- [`SPRINT-02.md`](SPRINT-02.md): migración visual y de contenidos.
+- [`SPRINT-04.md`](SPRINT-04.md): UX, SEO técnico y rendimiento.

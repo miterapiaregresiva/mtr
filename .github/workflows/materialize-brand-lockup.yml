@@ -11,32 +11,26 @@ permissions:
 
 jobs:
   materialize:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Write brand lockup into every HTML header
+      - name: Materialize and validate headers
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-
-          brand = '''<a class="brand brand-lockup" href="" aria-label="Mi Terapia Regresiva, inicio">
-        <img class="brand-symbol" src="assets/images/branding/mi-terapia-regresiva-simbolo.svg" alt="" width="68" height="68">
-        <span class="brand-copy">
-          <span class="brand-domain"><strong>miterapiaregresiva</strong><span class="domain-tld">.com</span></span>
-          <span class="brand-tagline">Explora tu historia. Comprende tu presente.</span>
-          <span class="brand-service">Terapia regresiva en Tenerife</span>
-        </span>
-      </a>'''
-
+          brand = ('<a class="brand brand-lockup" href="" aria-label="Mi Terapia Regresiva, inicio">'
+                   '<img class="brand-symbol" src="assets/images/branding/mi-terapia-regresiva-simbolo.svg" alt="" width="68" height="68">'
+                   '<span class="brand-copy">'
+                   '<span class="brand-domain"><strong>miterapiaregresiva</strong><span class="domain-tld">.com</span></span>'
+                   '<span class="brand-tagline">Explora tu historia. Comprende tu presente.</span>'
+                   '<span class="brand-service">Terapia regresiva en Tenerife</span>'
+                   '</span></a>')
           anchor = re.compile(r'<a\s+class="brand(?:\s+brand-lockup)?"\s+href=""(?:\s+aria-label="[^"]*")?>.*?</a>', re.S)
-          changed = 0
           headers = 0
-
+          changed = 0
           for path in Path('.').rglob('*.html'):
               text = path.read_text(encoding='utf-8')
               if 'site-header' not in text:
@@ -44,77 +38,42 @@ jobs:
               headers += 1
               new, count = anchor.subn(brand, text, count=1)
               if count != 1:
-                  raise SystemExit(f'{path}: expected exactly one brand anchor, found {count}')
+                  raise SystemExit(f'{path}: expected one brand anchor, found {count}')
               if 'assets/brand-lockup.css' not in new:
                   marker = '<link rel="stylesheet" href="assets/styles.css">'
                   if marker not in new:
-                      raise SystemExit(f'{path}: styles.css marker not found')
+                      raise SystemExit(f'{path}: styles.css marker missing')
                   new = new.replace(marker, marker + '<link rel="stylesheet" href="assets/brand-lockup.css">', 1)
               if new != text:
                   path.write_text(new, encoding='utf-8')
                   changed += 1
-
           js_path = Path('assets/site.js')
           js = js_path.read_text(encoding='utf-8')
-          js_new = re.sub(
-              r'\n  /\* Shared, indexable brand lockup across all page headers\. \*/.*?\n\n  var webpMap',
-              '\n\n  var webpMap',
-              js,
-              count=1,
-              flags=re.S,
-          )
-          if js_new == js and 'brand.innerHTML' in js:
-              raise SystemExit('site.js: could not remove dynamic brand injection')
-          js_path.write_text(js_new, encoding='utf-8')
-
-          if headers == 0:
-              raise SystemExit('No HTML headers found')
-
-          print(f'Materialized {headers} HTML headers; changed {changed} files.')
-          PY
-
-      - name: Validate static HTML brand
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
+          js = re.sub(r'\n  /\* Shared, indexable brand lockup across all page headers\. \*/.*?\n\n  var webpMap', '\n\n  var webpMap', js, count=1, flags=re.S)
+          if 'brand.innerHTML' in js or "querySelectorAll('.site-header .brand')" in js:
+              raise SystemExit('assets/site.js still builds the header brand')
+          js_path.write_text(js, encoding='utf-8')
+          if not headers:
+              raise SystemExit('No page headers found')
           problems = []
-          checked = 0
           for path in Path('.').rglob('*.html'):
               text = path.read_text(encoding='utf-8')
               if 'site-header' not in text:
                   continue
-              checked += 1
               if text.count('class="brand brand-lockup"') != 1:
-                  problems.append(f'{path}: static brand lockup missing or duplicated')
-              if 'class="brand-copy"' not in text:
-                  problems.append(f'{path}: brand text is not present in HTML')
-              if 'miterapiaregresiva</strong><span class="domain-tld">.com' not in text:
-                  problems.append(f'{path}: domain text missing')
-              if 'Explora tu historia. Comprende tu presente.' not in text:
-                  problems.append(f'{path}: tagline missing')
-              if 'Terapia regresiva en Tenerife' not in text:
-                  problems.append(f'{path}: service/location text missing')
-              if 'assets/brand-lockup.css' not in text:
-                  problems.append(f'{path}: brand stylesheet missing')
-
-          js = Path('assets/site.js').read_text(encoding='utf-8')
-          if 'brand.innerHTML' in js or "querySelectorAll('.site-header .brand')" in js:
-              problems.append('assets/site.js still constructs the brand dynamically')
-
+                  problems.append(f'{path}: static lockup missing or duplicated')
+              for required in ('class="brand-copy"', 'miterapiaregresiva</strong><span class="domain-tld">.com', 'Explora tu historia. Comprende tu presente.', 'Terapia regresiva en Tenerife', 'assets/brand-lockup.css'):
+                  if required not in text:
+                      problems.append(f'{path}: missing {required}')
           if problems:
               raise SystemExit('\n'.join(problems))
-          print(f'Validated {checked} static HTML headers.')
+          print(f'Validated {headers} static HTML headers; changed {changed} files.')
           PY
-
-      - name: Commit materialized headers
+      - name: Commit static headers
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          if git diff --cached --quiet; then
-            echo 'No changes needed.'
-            exit 0
-          fi
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Materialize brand lockup in all HTML headers'
           git push origin main

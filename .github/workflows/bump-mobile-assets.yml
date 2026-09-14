@@ -21,16 +21,10 @@ jobs:
 
           css_path = Path('assets/brand-lockup.css')
           css = css_path.read_text(encoding='utf-8')
-          old = '''/* mobile-footer-columns:start */
-@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}.site-footer .footer-grid>nav:first-of-type{align-items:flex-end;text-align:right}.site-footer .footer-grid>nav:last-of-type{align-items:flex-start;text-align:left}}
-/* mobile-footer-columns:end */'''
-          new = '''/* footer-link-columns:start */
-.site-footer .footer-grid>nav{align-items:center;text-align:center}
-@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}.site-footer .footer-grid>nav:first-of-type,.site-footer .footer-grid>nav:last-of-type{align-items:center;text-align:center}}
-/* footer-link-columns:end */'''
-          if old not in css:
-              raise SystemExit('Expected mobile footer block not found')
-          css_path.write_text(css.replace(old, new), encoding='utf-8')
+          marker = '/* footer-links-centered:20260914 */'
+          override = '\n' + marker + '\n.site-footer .footer-grid>nav{align-items:center;text-align:center}\n@media(max-width:700px){.site-footer .footer-grid>nav:first-of-type,.site-footer .footer-grid>nav:last-of-type{align-items:center;text-align:center}}\n'
+          if marker not in css:
+              css_path.write_text(css + override, encoding='utf-8')
 
           changed = 0
           for p in Path('.').rglob('*.html'):
@@ -49,6 +43,7 @@ jobs:
           fi
           git config user.name "gofio-design"
           git config user.email "gofio.design@gmail.com"
-          git add assets/brand-lockup.css '*.html' '**/*.html'
+          git add assets/brand-lockup.css
+          find . -name '*.html' -print0 | xargs -0 git add
           git commit -m "Center footer link columns"
           git push

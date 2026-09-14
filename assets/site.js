@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.querySelectorAll('.site-footer').forEach(function (footer) {
+    var resourceNav = footer.querySelector('nav[aria-label="Recursos y legal"]');
+    if (resourceNav && !resourceNav.querySelector('a[href="licencias-de-recursos/"]')) {
+      var resourceLink = document.createElement('a');
+      resourceLink.href = 'licencias-de-recursos/';
+      resourceLink.textContent = 'Licencias de recursos';
+      resourceNav.appendChild(resourceLink);
+    }
+
     if (footer.querySelector('.footer-legal')) return;
     var box = document.createElement('div');
     box.className = 'wrap footer-legal';

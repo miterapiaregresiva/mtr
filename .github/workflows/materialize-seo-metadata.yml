@@ -1,0 +1,88 @@
+name: Materialize SEO metadata
+on:
+  push:
+    paths:
+      - '.github/workflows/materialize-seo-metadata.yml'
+permissions:
+  contents: write
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hardcode titles and descriptions
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          meta = {
+            'terapia-regresiva/index.html': (
+              'Qué es la terapia regresiva | Sesiones presenciales en Tenerife',
+              'Qué es la terapia regresiva, cómo se vive una regresión y cómo se integra en un proceso presencial e individual en Tenerife.'),
+            'como-trabajo/index.html': (
+              'Cómo trabajo: terapia regresiva presencial en Tenerife',
+              'Conoce cómo trabajo la terapia regresiva presencial en Tenerife: entrevista inicial, sesiones individuales, integración y acompañamiento.'),
+            'sobre-mi/index.html': (
+              'Sobre mí | Terapia regresiva presencial en Tenerife',
+              'Conoce mi trayectoria, formación y forma de acompañar sesiones presenciales de terapia regresiva en Tenerife.'),
+            'preguntas-frecuentes/index.html': (
+              'Preguntas frecuentes sobre terapia regresiva en Tenerife',
+              'Respuestas sobre terapia regresiva presencial en Tenerife: control durante la sesión, duración, número de sesiones, reencarnación y ubicación.'),
+            'contacto/index.html': (
+              'Terapia regresiva en Tenerife | Contacto y sesiones presenciales',
+              'Contacto para solicitar información sobre sesiones presenciales e individuales de terapia regresiva en San Cristóbal de La Laguna, Tenerife.'),
+          }
+
+          changed = []
+          for rel, (title, desc) in meta.items():
+            path = Path(rel)
+            text = path.read_text(encoding='utf-8')
+            new = re.sub(r'<title>.*?</title>', f'<title>{title}</title>', text, count=1)
+            new = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{desc}">', new, count=1)
+            if new != text:
+              path.write_text(new, encoding='utf-8')
+              changed.append(rel)
+
+          js = Path('assets/site.js')
+          text = js.read_text(encoding='utf-8')
+          marker = "  const seoMeta={"
+          if marker in text:
+            start = text.index(marker)
+            end_marker = "  if(seo){document.title=seo.title;const meta=document.querySelector('meta[name=\"description\"]');if(meta)meta.setAttribute('content',seo.description)}"
+            end = text.index(end_marker, start) + len(end_marker)
+            while end < len(text) and text[end] in "\r\n":
+              end += 1
+            new = text[:start] + text[end:]
+            js.write_text(new, encoding='utf-8')
+            changed.append('assets/site.js')
+
+          print('Updated:', ', '.join(changed) if changed else 'none')
+      - name: Validate hardcoded metadata
+        shell: python
+        run: |
+          from pathlib import Path
+          checks = {
+            'terapia-regresiva/index.html': 'Qué es la terapia regresiva | Sesiones presenciales en Tenerife',
+            'como-trabajo/index.html': 'Cómo trabajo: terapia regresiva presencial en Tenerife',
+            'sobre-mi/index.html': 'Sobre mí | Terapia regresiva presencial en Tenerife',
+            'preguntas-frecuentes/index.html': 'Preguntas frecuentes sobre terapia regresiva en Tenerife',
+            'contacto/index.html': 'Terapia regresiva en Tenerife | Contacto y sesiones presenciales',
+          }
+          for rel, title in checks.items():
+            text = Path(rel).read_text(encoding='utf-8')
+            assert f'<title>{title}</title>' in text
+            assert 'noindex,nofollow' in text
+          assert 'const seoMeta=' not in Path('assets/site.js').read_text(encoding='utf-8')
+      - name: Commit hardcoded metadata
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terapia-regresiva/index.html como-trabajo/index.html sobre-mi/index.html preguntas-frecuentes/index.html contacto/index.html assets/site.js
+          git commit -m "Hardcode local SEO metadata in HTML"
+          git pull --rebase origin main
+          git push

@@ -14,3 +14,7 @@
 /* mobile-header-centering:start */
 @media(max-width:700px){.site-header .nav{align-items:center;text-align:center}.site-header .brand-lockup{margin-inline:auto;justify-content:center}.site-header .brand-copy{align-items:flex-start;text-align:left}.site-header .menu{width:100%;justify-content:center;padding-inline:.25rem}.site-header .menu a{text-align:center;justify-content:center}}
 /* mobile-header-centering:end */
+
+/* footer-links-centered:20260914 */
+.site-footer .footer-grid>nav{align-items:center;text-align:center}
+@media(max-width:700px){.site-footer .footer-grid>nav:first-of-type,.site-footer .footer-grid>nav:last-of-type{align-items:center;text-align:center}}

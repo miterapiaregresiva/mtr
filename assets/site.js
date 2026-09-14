@@ -1,15 +1,4 @@
 document.addEventListener('DOMContentLoaded',()=>{
-  const seoMeta={
-    '/':{title:'Terapia regresiva presencial en Tenerife | Mi Terapia Regresiva',description:'Terapia regresiva presencial en Tenerife. Sesiones individuales en San Cristóbal de La Laguna para explorar experiencias del pasado y comprender el presente.'},
-    '/terapia-regresiva/':{title:'Qué es la terapia regresiva | Sesiones presenciales en Tenerife',description:'Qué es la terapia regresiva, cómo se vive una regresión y cómo se integra en un proceso presencial e individual en Tenerife.'},
-    '/como-trabajo/':{title:'Cómo trabajo la terapia regresiva presencial en Tenerife',description:'Conoce cómo trabajo la terapia regresiva presencial en Tenerife: entrevista inicial, sesiones individuales, integración y acompañamiento.'},
-    '/sobre-mi/':{title:'Sobre mí | Terapia regresiva presencial en Tenerife',description:'Conoce mi trayectoria, formación y forma de acompañar sesiones presenciales de terapia regresiva en Tenerife.'},
-    '/preguntas-frecuentes/':{title:'Preguntas frecuentes sobre terapia regresiva en Tenerife',description:'Respuestas sobre terapia regresiva presencial en Tenerife: control durante la sesión, duración, número de sesiones, reencarnación y ubicación.'},
-    '/contacto/':{title:'Terapia regresiva en Tenerife | Contacto y sesiones presenciales',description:'Contacto para solicitar información sobre sesiones presenciales e individuales de terapia regresiva en San Cristóbal de La Laguna, Tenerife.'}
-  };
-  const seo=seoMeta[location.pathname];
-  if(seo){document.title=seo.title;const meta=document.querySelector('meta[name="description"]');if(meta)meta.setAttribute('content',seo.description)}
-
   document.querySelectorAll('.faq').forEach(f=>{const items=[...f.querySelectorAll('details')];items.forEach(i=>i.addEventListener('toggle',()=>{if(i.open)items.forEach(o=>{if(o!==i)o.open=false})}))});
 
 

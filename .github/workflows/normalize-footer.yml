@@ -1,4 +1,4 @@
-name: Normalize site footer
+name: Normalize staging site
 on:
   push:
     paths:
@@ -10,23 +10,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace all footers
+      - name: Normalize root paths and footers
         shell: python
         run: |
           from pathlib import Path
           import re
 
-          footer = '''<footer class="site-footer"><div class="wrap footer-grid"><div><strong>Mi Terapia Regresiva</strong><p>Terapia regresiva presencial en Tenerife.</p></div><nav aria-label="Enlaces del sitio"><a href="terapia-regresiva/">Terapia regresiva</a><a href="como-trabajo/">Cómo trabajo</a><a href="sobre-mi/">Sobre mí</a><a href="articulos/">Artículos</a><a href="contacto/">Contacto</a></nav><nav aria-label="Recursos y legal"><a href="biblioteca-de-terapia-regresiva/">Biblioteca</a><a href="preguntas-frecuentes/">Preguntas frecuentes</a><a href="politica-de-privacidad/">Política de privacidad</a><a href="https://www.instagram.com/miterapiaregresiva/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Terapia Regresiva, abre en una pestaña nueva">Instagram · @miterapiaregresiva</a></nav></div></footer>'''
+          footer = '''<footer class="site-footer"><div class="wrap footer-grid"><div><strong>Mi Terapia Regresiva</strong><p>Terapia regresiva presencial en Tenerife.</p></div><nav aria-label="Enlaces del sitio"><a href="terapia-regresiva/">Terapia regresiva</a><a href="como-trabajo/">Cómo trabajo</a><a href="sobre-mi/">Sobre mí</a><a href="articulos/">Artículos</a><a href="contacto/">Contacto</a></nav><nav aria-label="Recursos y legal"><a href="biblioteca-de-terapia-regresiva/">Biblioteca</a><a href="preguntas-frecuentes/">Preguntas frecuentes</a><a href="politica-de-privacidad/">Política de privacidad</a><a href="licencias-de-recursos/">Licencias de recursos</a><a href="https://www.instagram.com/miterapiaregresiva/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Terapia Regresiva, abre en una pestaña nueva">Instagram · @miterapiaregresiva</a></nav></div></footer>'''
 
-          changed = 0
+          changed = []
           for path in Path('.').rglob('index.html'):
               text = path.read_text(encoding='utf-8')
-              new, count = re.subn(r'<footer class="site-footer">.*?</footer>', footer, text, count=1, flags=re.S)
-              if count:
+              new = text.replace('<base href="/mtr/">', '<base href="/">')
+              new = new.replace('https://miterapiaregresiva.com/mtr/', 'https://stg.miterapiaregresiva.com/')
+              new, _ = re.subn(r'<footer class="site-footer">.*?</footer>', footer, new, count=1, flags=re.S)
+              if new != text:
                   path.write_text(new, encoding='utf-8')
-                  changed += 1
-          print(f'Updated {changed} footers')
-      - name: Commit normalized footers
+                  changed.append(str(path))
+
+          site_js = Path('assets/site.js')
+          text = site_js.read_text(encoding='utf-8')
+          new = text.replace('https://github.com/miterapiaregresiva/mtr/blob/main/LICENSE', 'https://github.com/miterapiaregresiva/stg/blob/main/LICENSE')
+          if new != text:
+              site_js.write_text(new, encoding='utf-8')
+              changed.append(str(site_js))
+
+          for name in ['README.md', 'SPRINT-01.md', 'SPRINT-02.md', 'SPRINT-04.md', 'TODO.md']:
+              path = Path(name)
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              new = text.replace('https://miterapiaregresiva.com/mtr/', 'https://stg.miterapiaregresiva.com/')
+              new = new.replace('miterapiaregresiva/mtr', 'miterapiaregresiva/stg')
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+                  changed.append(str(path))
+
+          print(f'Updated {len(changed)} files')
+          for path in changed:
+              print(path)
+      - name: Commit normalized staging site
         run: |
           if git diff --quiet; then
             echo "No changes needed"
@@ -34,6 +57,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add '**/index.html' index.html
-          git commit -m "Sprint 2: normalize footer across site"
+          git add .
+          git commit -m "Migrate staging from /mtr/ to root subdomain"
           git push

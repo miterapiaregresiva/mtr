@@ -56,6 +56,47 @@ document.addEventListener('DOMContentLoaded', function () {
     link.classList.add('button', 'content-link-button');
   });
 
+  /*
+   * Breadcrumb structured data for every page that already exposes a visible
+   * breadcrumb trail. Key landing pages can carry static JSON-LD; this block
+   * fills the remaining pages without creating duplicates. Production URLs are
+   * used intentionally because staging is noindex and mirrors production paths.
+   */
+  var hasBreadcrumbSchema = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).some(function (script) {
+    return script.textContent.indexOf('BreadcrumbList') !== -1;
+  });
+  var breadcrumb = document.querySelector('.breadcrumbs');
+  if (breadcrumb && !hasBreadcrumbSchema) {
+    var productionOrigin = 'https://miterapiaregresiva.com';
+    var labels = breadcrumb.textContent.split('→').map(function (part) {
+      return part.trim();
+    }).filter(Boolean);
+    var links = Array.from(breadcrumb.querySelectorAll('a'));
+    var items = labels.map(function (label, index) {
+      var itemUrl;
+      if (index < links.length) {
+        var parsed = new URL(links[index].href, window.location.href);
+        itemUrl = productionOrigin + parsed.pathname;
+      } else {
+        itemUrl = productionOrigin + window.location.pathname;
+      }
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        name: label,
+        item: itemUrl
+      };
+    });
+    var schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items
+    });
+    document.head.appendChild(schema);
+  }
+
   if (!document.querySelector('.whatsapp-float')) {
     var link = document.createElement('a');
     link.className = 'whatsapp-float';

@@ -1,0 +1,39 @@
+name: Normalize site footer
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-footer.yml'
+permissions:
+  contents: write
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace all footers
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          footer = '''<footer class="site-footer"><div class="wrap footer-grid"><div><strong>Mi Terapia Regresiva</strong><p>Terapia regresiva presencial en Tenerife.</p></div><nav aria-label="Enlaces del sitio"><a href="terapia-regresiva/">Terapia regresiva</a><a href="como-trabajo/">Cómo trabajo</a><a href="sobre-mi/">Sobre mí</a><a href="articulos/">Artículos</a><a href="contacto/">Contacto</a></nav><nav aria-label="Recursos y legal"><a href="biblioteca-de-terapia-regresiva/">Biblioteca</a><a href="preguntas-frecuentes/">Preguntas frecuentes</a><a href="politica-de-privacidad/">Política de privacidad</a><a href="https://www.instagram.com/miterapiaregresiva/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Terapia Regresiva, abre en una pestaña nueva">Instagram · @miterapiaregresiva</a></nav></div></footer>'''
+
+          changed = 0
+          for path in Path('.').rglob('index.html'):
+              text = path.read_text(encoding='utf-8')
+              new, count = re.subn(r'<footer class="site-footer">.*?</footer>', footer, text, count=1, flags=re.S)
+              if count:
+                  path.write_text(new, encoding='utf-8')
+                  changed += 1
+          print(f'Updated {changed} footers')
+      - name: Commit normalized footers
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '**/index.html' index.html
+          git commit -m "Sprint 2: normalize footer across site"
+          git push

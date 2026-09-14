@@ -4,19 +4,20 @@
 
 ### 1. Normalizar la sección de autores
 
-Usar como patrón visual y estructural las fichas ya normalizadas de **Brian Weiss** y **Michael Newton**.
+Patrón visual y estructural: fichas de **Brian Weiss** y **Michael Newton**.
 
-- [ ] Rediseñar `/autores/` para que comparta el mismo lenguaje visual de las fichas de autor: retrato o placeholder coherente, categoría, información breve y tarjetas homogéneas.
-- [ ] Normalizar Helen Wambach.
-- [ ] Normalizar Ian Stevenson.
-- [ ] Normalizar Raymond A. Moody.
-- [ ] Normalizar Roger J. Woolger.
-- [ ] Normalizar Morris Netherton.
-- [ ] Normalizar Edith Fiore.
-- [ ] Normalizar Hans TenDam.
-- [ ] Mantener una estructura común en todas las fichas: hero de autor, datos rápidos, por qué aparece en la biblioteca, bibliografía seleccionada, fuentes y acceso a libros.
-- [ ] Utilizar retrato reutilizable cuando exista y esté verificada su licencia; en caso contrario usar los placeholders de perfil ya incorporados al proyecto.
-- [ ] Mantener autores/biblioteca como recurso secundario y no competir con las páginas de servicio.
+- [x] Rediseñar `/autores/` para que comparta el mismo lenguaje visual de las fichas de autor: retrato o placeholder coherente, categoría, información breve y tarjetas homogéneas.
+- [x] Normalizar Helen Wambach.
+- [x] Normalizar Ian Stevenson.
+- [x] Normalizar Raymond A. Moody.
+- [x] Normalizar Roger J. Woolger.
+- [x] Normalizar Morris Netherton.
+- [x] Normalizar Edith Fiore.
+- [x] Normalizar Hans TenDam.
+- [x] Mantener una estructura común en todas las fichas: hero de autor, datos rápidos, por qué aparece en la biblioteca, bibliografía seleccionada, fuentes y acceso a libros.
+- [x] Utilizar retrato reutilizable cuando exista y esté verificada su licencia; en caso contrario usar los placeholders de perfil ya incorporados al proyecto.
+- [x] Mantener autores/biblioteca como recurso secundario y no competir con las páginas de servicio.
+- [ ] Incorporar localmente el retrato reutilizable ya identificado de Raymond A. Moody y revisar si encontramos retratos reutilizables para otras fichas sin depender de hotlinks externos.
 
 ## Lighthouse / calidad técnica
 
@@ -28,18 +29,26 @@ Resultados recibidos el 14/09/2026 para `https://miterapiaregresiva.com/mtr/`:
 - SEO: 66
 - Agentic Browsing: 2/2
 
+### Lectura del informe
+
+- El rendimiento medido es excelente: FCP 0,4 s, LCP 0,5 s, TBT 10 ms, CLS 0 y Speed Index 0,5 s.
+- El SEO 66 no representa un problema del contenido: el staging lleva deliberadamente `noindex,nofollow` y Lighthouse lo identifica como causa del bloqueo de indexación.
+- El informe todavía muestra JPG/PNG de `assets/images/original/`; el repositorio actual ya referencia WebP en la portada y páginas migradas, por lo que hay que repetir la medición tras el despliegue actual.
+- La mayor parte de los avisos de JavaScript, tareas largas y código no utilizado proceden de extensiones instaladas en Chrome durante la captura y no del sitio.
+- Lighthouse también señala ausencia de CSP, HSTS, COOP y política de framing. Son tareas de infraestructura/cabeceras y no afectaron al 100 de Best Practices del informe.
+
 ### Revisiones pendientes
 
 - [ ] Repetir Lighthouse después de que el último despliegue de GitHub Pages esté publicado, preferiblemente en ventana de incógnito y sin extensiones del navegador.
-- [ ] Confirmar que el HTML desplegado ya sirve las imágenes WebP y no las antiguas rutas `assets/images/original/*.jpg|png`.
-- [ ] Añadir `fetchpriority="high"` a la imagen LCP de la portada.
+- [ ] Confirmar desde el sitio desplegado que ya se sirven las imágenes WebP y no las antiguas rutas `assets/images/original/*.jpg|png`.
+- [x] Añadir `fetchpriority="high"` a la imagen LCP de la portada.
 - [ ] Preparar tamaños responsive (`srcset` / `sizes`) para las imágenes principales cuando aporte una reducción real de transferencia.
 - [ ] Revisar TTL de caché de recursos estáticos. GitHub Pages limita el control directo de cabeceras, por lo que se evaluará una solución de borde/CDN si compensa.
 - [ ] Antes del paso a producción retirar `noindex,nofollow`; el SEO 66 del informe actual se debe principalmente al bloqueo deliberado de indexación del staging.
 - [ ] Añadir y revisar `rel="canonical"` en producción.
 - [ ] Validar datos estructurados cuando se incorporen.
 - [ ] Evaluar cabeceras de seguridad: CSP, HSTS, COOP y protección frente a framing. Si GitHub Pages no permite configurarlas de forma suficiente, resolverlas en la capa de dominio/CDN.
-- [ ] No considerar como problemas propios los avisos de JavaScript, tareas largas o terceros originados por extensiones de Chrome presentes durante la medición.
+- [x] No considerar como problemas propios los avisos de JavaScript, tareas largas o terceros originados por extensiones de Chrome presentes durante la medición.
 
 ## Instagram — publicaciones para programar
 

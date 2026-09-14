@@ -1,0 +1,31 @@
+.home-hero .hero-split{align-items:center}
+.home-hero .hero-copy{min-width:0}
+.home-hero .hero-brand-panel{display:flex;align-items:center;justify-content:center;min-width:0;padding:clamp(1rem,2vw,2rem)}
+.home-hero .hero-brand-lockup{width:min(100%,390px);display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--text);line-height:1.1}
+.home-hero .hero-brand-symbol{display:block;width:clamp(170px,19vw,245px);height:auto;aspect-ratio:1/1;object-fit:contain;margin:0 auto .9rem}
+.home-hero .hero-brand-domain{display:block;white-space:nowrap;font-size:clamp(1.45rem,2.3vw,2rem);letter-spacing:-.045em;line-height:1}
+.home-hero .hero-brand-domain strong{font-weight:720}
+.home-hero .hero-brand-domain .domain-tld{font-weight:300;color:#514b52}
+.home-hero .hero-brand-tagline{display:block;margin-top:.72rem;font-size:clamp(.72rem,1vw,.84rem);font-weight:400;letter-spacing:.095em;color:#3f393f}
+.home-hero .hero-brand-divider{width:min(100%,300px);display:flex;align-items:center;gap:.75rem;margin-top:1rem;color:#514b52}
+.home-hero .hero-brand-divider::before,.home-hero .hero-brand-divider::after{content:"";height:1px;flex:1;background:currentColor;opacity:.55}
+.home-hero .hero-brand-dot{display:block;width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 7px}
+.home-hero .hero-brand-service{display:block;margin-top:.8rem;white-space:nowrap;font-size:clamp(.6rem,.85vw,.72rem);font-weight:450;letter-spacing:.17em;color:#514b52}
+@media(max-width:900px){
+  .home-hero .hero-split{display:flex;flex-direction:column;gap:2rem}
+  .home-hero .hero-brand-panel{order:-1;width:100%;padding:.25rem 0 .5rem}
+  .home-hero .hero-copy{order:0;width:100%}
+  .home-hero .hero-brand-lockup{width:min(100%,360px)}
+  .home-hero .hero-brand-symbol{width:clamp(150px,42vw,215px)}
+  .home-hero .hero-brand-domain{font-size:clamp(1.3rem,5.5vw,1.85rem)}
+}
+@media(max-width:520px){
+  .home-hero{padding-top:2rem}
+  .home-hero .hero-brand-panel{padding:0}
+  .home-hero .hero-brand-lockup{width:min(100%,320px)}
+  .home-hero .hero-brand-symbol{width:clamp(135px,46vw,185px);margin-bottom:.75rem}
+  .home-hero .hero-brand-domain{font-size:1.32rem}
+  .home-hero .hero-brand-tagline{font-size:.66rem;letter-spacing:.055em}
+  .home-hero .hero-brand-divider{width:min(100%,240px);margin-top:.85rem}
+  .home-hero .hero-brand-service{font-size:.56rem;letter-spacing:.1em;white-space:normal}
+}

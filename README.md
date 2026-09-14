@@ -6,6 +6,11 @@ Nueva versión de **miterapiaregresiva.com** orientada a SEO, tráfico orgánico
 
 Staging estático en desarrollo y revisión continua.
 
+## Regla de promoción
+
+- **`TODO.md` es exclusivo de `stg` y nunca debe copiarse, sincronizarse ni promocionarse a producción.**
+- Cualquier proceso manual o automatizado de promoción a `miterapiaregresiva.github.io` debe excluir expresamente `TODO.md`.
+
 ### Núcleo principal
 
 - Inicio
@@ -27,7 +32,7 @@ La biblioteca se mantiene deliberadamente como recurso secundario de apoyo, no c
 
 ## Seguimiento
 
-- [`TODO.md`](TODO.md): pendientes editoriales, técnicos, Instagram y preparación de producción.
+- [`TODO.md`](TODO.md): pendientes editoriales, técnicos, Instagram y preparación de producción. **Solo staging.**
 - [`SPRINT-01.md`](SPRINT-01.md): arquitectura inicial.
 - [`SPRINT-02.md`](SPRINT-02.md): migración visual y de contenidos.
 - [`SPRINT-04.md`](SPRINT-04.md): UX, SEO técnico y rendimiento.

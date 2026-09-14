@@ -74,5 +74,6 @@ jobs:
             echo 'No favicon changes to commit.'
           else
             git commit -m 'Sprint 3: normalize favicons across site'
-            git push
+            git pull --rebase origin main
+            git push origin main
           fi

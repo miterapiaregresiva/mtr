@@ -8,5 +8,9 @@
 /* home-hero-brand:end */
 
 /* mobile-footer-columns:start */
-@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}}
+@media(max-width:700px){.site-footer .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem 1rem}.site-footer .footer-brand-column{grid-column:1/-1}.site-footer nav{min-width:0}.site-footer nav a{font-size:.94rem;line-height:1.35}.site-footer .footer-grid>nav:first-of-type{align-items:flex-end;text-align:right}.site-footer .footer-grid>nav:last-of-type{align-items:flex-start;text-align:left}}
 /* mobile-footer-columns:end */
+
+/* mobile-header-centering:start */
+@media(max-width:700px){.site-header .nav{align-items:center;text-align:center}.site-header .brand-lockup{margin-inline:auto;justify-content:center}.site-header .menu{width:100%;justify-content:center;padding-inline:.25rem}.site-header .menu a{text-align:center;justify-content:center}}
+/* mobile-header-centering:end */

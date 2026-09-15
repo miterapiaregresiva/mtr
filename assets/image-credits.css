@@ -1,0 +1,14 @@
+/* Image credits: native disclosure works with touch, keyboard and without JS. */
+.image-with-credit{position:relative}
+.image-credit{position:absolute;inset:auto .6rem .6rem auto;z-index:2;max-width:calc(100% - 1.2rem);font-size:.875rem;line-height:1.5;text-align:left;color:var(--text)}
+.image-credit>summary{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:auto;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--accent-strong);box-shadow:0 2px 8px #0003;cursor:pointer;list-style:none}
+.image-credit>summary::-webkit-details-marker{display:none}
+.image-credit>summary span{display:grid;place-items:center;width:22px;height:22px;border:2px solid currentColor;border-radius:50%;font-family:Georgia,serif;font-size:17px;font-weight:700;line-height:1}
+.image-credit>summary:hover{background:var(--accent-soft)}
+.image-credit>summary:focus-visible{outline:3px solid var(--accent-strong);outline-offset:3px}
+.image-credit[open]{width:22rem;max-height:calc(100% - 1.2rem);overflow:auto;padding:.6rem;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px #0003}
+.image-credit[open]>summary{box-shadow:none}
+.image-credit-panel{padding:.1rem .35rem .2rem;overflow-wrap:anywhere}
+.image-credit-panel p{margin:.55rem 0}
+.image-credit-panel a{color:var(--accent-strong);text-decoration:underline}
+@media print{.image-credit{position:static;max-width:none}.image-credit>summary{display:none}.image-credit::details-content{content-visibility:visible;display:block}.image-credit-panel{display:block}}

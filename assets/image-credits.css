@@ -1,14 +1,15 @@
 /* Image credits: native disclosure works with touch, keyboard and without JS. */
 .image-with-credit{position:relative}
-.image-credit{position:absolute;inset:auto .6rem .6rem auto;z-index:2;max-width:calc(100% - 1.2rem);font-size:.875rem;line-height:1.5;text-align:left;color:var(--text)}
-.image-credit>summary{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:auto;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--accent-strong);box-shadow:0 2px 8px #0003;cursor:pointer;list-style:none}
+.image-credit{position:absolute;inset:auto .45rem .45rem auto;z-index:2;width:44px;height:44px;font-size:.875rem;line-height:1.5;text-align:left;color:var(--text)}
+.image-credit>summary{display:grid;place-items:center;width:44px;height:44px;margin-left:auto;border:0;border-radius:0;background:transparent;color:#fff;cursor:pointer;list-style:none}
 .image-credit>summary::-webkit-details-marker{display:none}
-.image-credit>summary span{display:grid;place-items:center;width:22px;height:22px;border:2px solid currentColor;border-radius:50%;font-family:Georgia,serif;font-size:17px;font-weight:700;line-height:1}
-.image-credit>summary:hover{background:var(--accent-soft)}
-.image-credit>summary:focus-visible{outline:3px solid var(--accent-strong);outline-offset:3px}
-.image-credit[open]{width:22rem;max-height:calc(100% - 1.2rem);overflow:auto;padding:.6rem;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px #0003}
-.image-credit[open]>summary{box-shadow:none}
-.image-credit-panel{padding:.1rem .35rem .2rem;overflow-wrap:anywhere}
-.image-credit-panel p{margin:.55rem 0}
-.image-credit-panel a{color:var(--accent-strong);text-decoration:underline}
-@media print{.image-credit{position:static;max-width:none}.image-credit>summary{display:none}.image-credit::details-content{content-visibility:visible;display:block}.image-credit-panel{display:block}}
+/* Google Material Icons — info (outlined), Apache-2.0. The 44px trigger remains transparent; only the 24px glyph is visible. */
+.image-credit>summary span{display:block;width:24px;height:24px;font-size:0;line-height:0;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E") center/contain no-repeat;mix-blend-mode:difference;filter:drop-shadow(0 1px 2px rgb(0 0 0/.28))}
+.image-credit>summary:hover span{transform:scale(1.06)}
+.image-credit>summary:focus-visible{outline:3px solid var(--focus);outline-offset:1px;border-radius:6px}
+.image-credit[open]{width:44px;height:44px;overflow:visible;padding:0;background:transparent;border:0;box-shadow:none}
+.image-credit-panel{position:absolute;right:0;bottom:calc(100% + .35rem);width:22rem;max-width:min(22rem,calc(100vw - 2rem));max-height:min(20rem,calc(100vh - 6rem));overflow:auto;padding:.65rem .8rem;border:1px solid rgb(255 255 255/.18);border-radius:12px;background:rgb(30 25 31/.88);backdrop-filter:blur(8px);box-shadow:0 6px 22px #0004;color:#fff;overflow-wrap:anywhere}
+.image-credit-panel p{margin:.45rem 0}
+.image-credit-panel a{color:#fff;text-decoration:underline;text-decoration-thickness:.08em;text-underline-offset:.15em}
+@media print{.image-credit{position:static;width:auto;height:auto}.image-credit>summary{display:none}.image-credit::details-content{content-visibility:visible;display:block}.image-credit-panel{position:static;width:auto;max-width:none;max-height:none;overflow:visible;padding:.4rem 0;border:0;background:transparent;box-shadow:none;color:var(--text)}.image-credit-panel a{color:var(--accent-strong)}}
+@media(prefers-reduced-motion:no-preference){.image-credit>summary span{transition:transform .16s ease}}
